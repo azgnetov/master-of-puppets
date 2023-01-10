@@ -54,7 +54,7 @@ public class Animal extends Entity {
     } while (map[getX()][getY()] >= getDensity());
 
     if (oldX == getX() && oldY == getY()) {
-      System.out.printf(ConsoleColors.CYAN + "Существо %s решило никуда не ходить и остался в клетке [%s:%s]",
+      System.out.printf(ConsoleColors.CYAN + "Существо %s решило никуда не ходить и осталось в клетке [%s:%s]",
           getTitle(), getX(), getY());
     } else {
       System.out.printf(ConsoleColors.BLUE + "Существо %s ушло из клетки [%s:%s] в клетку [%s:%s]",
@@ -71,18 +71,20 @@ public class Animal extends Entity {
       if (getSatiety() < getVoracity()) {
         int probability = CSVScanner.scan(getType(), entity.getType());
         if (new Random().nextInt(100) < probability) {
-          System.out.printf(ConsoleColors.RED + "%s (%s SP) выпил и закусил существом %s",
-              getTitle(), getSatiety(), entity.getTitle());
+          System.out.printf(ConsoleColors.RED + "%s (%s HP / %s SP) выпил и закусил существом %s",
+              getTitle(), getHealth(), getSatiety(), entity.getTitle());
           addSatiety(Math.min(entity.getHealth(), voracity));
+          setHealth(getHealth() + Math.min(entity.getHealth(), voracity));
           entity.setHealth(entity.getHealth() - voracity);
-          System.out.printf(", стало %s SP, у жертвы осталось %s HP", getSatiety(), entity.getHealth());
+          System.out.printf(". Теперь у него %s HP / %s SP, а у жертвы осталось %s HP",
+              getHealth(), getSatiety(), entity.getHealth());
           if (entity.getHealth() == 0) {
-            System.out.printf(". " + ConsoleColors.RED_UNDERLINED + "В следующий ход %s умрет", entity.getTitle());
+            System.out.printf(". " + ConsoleColors.RED_UNDERLINED + "Скоро %s умрет", entity.getTitle());
           }
           System.out.println(ConsoleColors.RESET);
         } else if (probability > 0) {
-          System.out.printf(ConsoleColors.YELLOW + "%s (%s SP) не смог съесть существо %s",
-              getTitle(), getSatiety(), entity.getTitle());
+          System.out.printf(ConsoleColors.YELLOW + "%s не смог съесть существо %s",
+              getTitle(), entity.getTitle());
           System.out.println(ConsoleColors.RESET);
         }
       } else {

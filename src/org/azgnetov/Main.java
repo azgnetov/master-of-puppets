@@ -1,21 +1,65 @@
 package org.azgnetov;
 
-import java.time.Instant;
+import java.util.Random;
 
 public class Main {
-  public static void main(String[] args) throws InterruptedException {
-    Instant startTime = Instant.now();
+
+  public static void main(String[] args) {
     Zoo zoo = new Zoo();
 
-    for (int i = 0; i < 200; i++) {
-      zoo.showSummary(String.valueOf(i));
-      //if (i % 100 == 0) zoo.showDetails();
-      zoo.turn();
-      zoo.growPlants(100);
-      //Thread.sleep(5000);
+    ZooThread thread1 = new ZooThread(zoo);
+    thread1.start();
+
+    ZooThread thread2 = new ZooThread(zoo);
+    thread2.start();
+
+    ZooThread thread3 = new ZooThread(zoo);
+    thread3.start();
+
+    ZooThread thread4 = new ZooThread(zoo);
+    thread4.start();
     }
-    zoo.showSummary("последний");
-    Instant endTime = Instant.now();
-    System.out.println("Прошло времени: " + String.valueOf(endTime.getEpochSecond()-startTime.getEpochSecond()) + "сек");
+}
+
+class ZooThread extends Thread {
+  Zoo zoo;
+
+  public ZooThread(Zoo zoo) {
+    this.zoo = zoo;
+  }
+
+  @Override
+  public void run() {
+    int delay = 1;
+    for (int i = 0; i < 100; i++) {
+      try {
+        zoo.growPlants();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+      try {
+        Thread.sleep(new Random().nextInt(delay));
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      zoo.moveHerbivores();
+      try {
+        Thread.sleep(new Random().nextInt(delay));
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      zoo.moveCarnivores();
+      try {
+        Thread.sleep(new Random().nextInt(delay));
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      zoo.killEntities();
+    }
+    zoo.showSummary();
+    //zoo.showDetails();
   }
 }

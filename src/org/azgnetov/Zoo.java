@@ -3,9 +3,9 @@ package org.azgnetov;
 import org.azgnetov.model.*;
 import org.azgnetov.model.species.*;
 import org.azgnetov.utils.ConsoleColors;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.Random;
 
 public class Zoo {
   public static final int X_RESOLUTION = 20;
@@ -23,7 +23,7 @@ public class Zoo {
   public static HashSet<Eagle> eagles = new HashSet<>();
 
   public Zoo() {
-    growPlants(1000);
+    growPlants(100);
 
     for (int i = 1; i <= 100; i++) {
       herbivores.add(new Horse(i));
@@ -46,12 +46,16 @@ public class Zoo {
     }
   }
 
-  public void growHorses(int number) {
-    for (int i = 1; i <= number; i++) {
-      Horse horse = new Horse(i);
-      horses.add(horse);
+  synchronized public void growPlants() throws InterruptedException {
+    if (plants.size() < 1000) {
+      int random = new Random().nextInt(100);
+      System.out.printf("Сейчас %d растений. Выросло еще %d растений%n", plants.size(), random);
+      for (int i = 1; i <= random; i++) {
+        plants.add(new Plant());
+      }
+    } else {
+      System.out.printf("Сейчас %d растений. Рост новых растений остановлен%n", plants.size());
     }
-    herbivores.addAll(horses);
   }
 
   // не работает
@@ -70,14 +74,22 @@ public class Zoo {
     System.out.println(ConsoleColors.RESET);
   }
 
-  public void showDetails() {
+  synchronized public void showSummary() {
+    System.out.printf(ConsoleColors.BLACK_BACKGROUND_BRIGHT +
+            "Сейчас в зоопарке есть существа: %s растений, %s травоядных, %s хищников",
+        plants.size(), herbivores.size(), carnivores.size());
+    System.out.println(ConsoleColors.RESET);
+  }
+
+  synchronized public void showDetails() {
     HashSet<Entity> entities = new HashSet<>();
     entities.addAll(plants);
     entities.addAll(herbivores);
     entities.addAll(carnivores);
     for (Entity entity : entities) {
-      System.out.printf("%s (%s HP) в клетке [%s:%s]%n",
+      System.out.printf("%s (%s HP) в клетке [%s:%s]",
           entity.getTitle(), entity.getHealth(), entity.getX(), entity.getY());
+      System.out.println(ConsoleColors.RESET);
     }
   }
 
@@ -96,6 +108,29 @@ public class Zoo {
         carnivore.eat(herbivore);
       }
     }
+    herbivores.removeIf(herbivore -> herbivore.getHealth() == 0);
+  }
+
+  synchronized public void moveHerbivores() {
+    for (Herbivore herbivore : herbivores) {
+      herbivore.move();
+      for (Plant plant : plants) {
+        herbivore.eat(plant);
+      }
+    }
+  }
+
+  synchronized public void moveCarnivores() {
+    for (Carnivore carnivore : carnivores) {
+      carnivore.move();
+      for (Herbivore herbivore : herbivores) {
+        carnivore.eat(herbivore);
+      }
+    }
+  }
+
+  synchronized public void killEntities() {
+    plants.removeIf(plant -> plant.getHealth() == 0);
     herbivores.removeIf(herbivore -> herbivore.getHealth() == 0);
   }
 

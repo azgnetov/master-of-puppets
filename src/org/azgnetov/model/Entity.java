@@ -68,7 +68,7 @@ public abstract class Entity {
   }
 
   public void setHealth(float health) {
-    this.health = Math.max(health, 0);
+    this.health = Math.min(Math.max(health, 0), this.healthMax);
   }
 
 }
