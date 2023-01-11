@@ -13,11 +13,6 @@ public class Fox extends Carnivore {
   }
 
   @Override
-  public void move() {
-    super.move(foxMap);
-  }
-
-  @Override
   public void reproduce() {
 
   }

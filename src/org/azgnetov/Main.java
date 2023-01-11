@@ -1,16 +1,12 @@
 package org.azgnetov;
 
-import org.azgnetov.arena.Arena;
-import org.azgnetov.arena.HerbivoresThread;
-import org.azgnetov.arena.CarnivoresThread;
-import org.azgnetov.arena.PlantsThread;
-import java.time.Instant;
+import org.azgnetov.arena.*;
+
 import static org.azgnetov.arena.Arena.ITERATIONS;
 
 public class Main {
 
   public static void main(String[] args) throws InterruptedException {
-    Instant startTime = Instant.now();
     Arena arena = new Arena();
 
     /*for (int i = 0; i < ITERATIONS; i++) {
@@ -27,12 +23,15 @@ public class Main {
     CarnivoresThread carnivoresThread = new CarnivoresThread(arena);
     carnivoresThread.start();
 
+    ClearingThread clearingThread = new ClearingThread(arena);
+    clearingThread.start();
+
     plantsThread.join();
     herbivoresThread.join();
     carnivoresThread.join();
 
-    Instant endTime = Instant.now();
-    System.out.println("Прошло времени: " + (endTime.getEpochSecond() - startTime.getEpochSecond()) + "сек");
+    Thread.sleep(1000);
+    clearingThread.stopClearing();
     }
 }
 

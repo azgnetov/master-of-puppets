@@ -21,10 +21,6 @@ public class HerbivoresThread extends Thread {
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
-
-      arena.killEntities();
     }
-    arena.showSummary();
-    //zoo.showDetails();
   }
 }

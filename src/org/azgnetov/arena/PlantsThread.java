@@ -15,20 +15,12 @@ public class PlantsThread extends Thread {
   @Override
   public void run() {
     for (int i = 0; i < ITERATIONS; i++) {
-      try {
-        arena.growPlants();
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
+      arena.growPlants();
       try {
         Thread.sleep(new Random().nextInt(ITERATION_DELAY_MS));
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
-
-      arena.killEntities();
     }
-    arena.showSummary();
-    //zoo.showDetails();
   }
 }

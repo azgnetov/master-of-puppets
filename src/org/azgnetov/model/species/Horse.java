@@ -14,11 +14,6 @@ public class Horse extends Herbivore {
   }
 
   @Override
-  public void move() {
-    super.move(horseMap);
-  }
-
-  @Override
   public Animal reproduce() {
     return reproduce(EntityParams.HORSE, horseMap);
   }

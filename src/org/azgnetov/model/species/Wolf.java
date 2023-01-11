@@ -16,11 +16,6 @@ public class Wolf extends Carnivore {
   }
 
   @Override
-  public void move() {
-    super.move(wolfMap);
-  }
-
-  @Override
   public void reproduce() {
     super.reproduce(EntityParams.WOLF, wolfMap);
   }

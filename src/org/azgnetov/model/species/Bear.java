@@ -13,11 +13,6 @@ public class Bear extends Carnivore {
   }
 
   @Override
-  public void move() {
-    super.move(bearMap);
-  }
-
-  @Override
   public void reproduce() {
 
   }

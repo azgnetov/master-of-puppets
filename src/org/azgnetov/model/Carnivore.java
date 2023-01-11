@@ -1,8 +1,8 @@
 package org.azgnetov.model;
 
 public abstract class Carnivore extends Animal {
-  public Carnivore(EntityParams params, int[][] map) {
-    super(params, map);
+  public Carnivore(EntityParams params, int[][] population) {
+    super(params, population);
   }
 
   @Override
@@ -11,8 +11,6 @@ public abstract class Carnivore extends Animal {
       super.eat(entity);
     }
   }
-
-  public abstract void move();
 
   public abstract void reproduce();
 }

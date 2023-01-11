@@ -13,11 +13,6 @@ public class Eagle extends Carnivore {
   }
 
   @Override
-  public void move() {
-    super.move(eagleMap);
-  }
-
-  @Override
   public void reproduce() {
 
   }

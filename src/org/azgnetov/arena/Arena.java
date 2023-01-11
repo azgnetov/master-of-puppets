@@ -4,14 +4,20 @@ import org.azgnetov.model.*;
 import org.azgnetov.model.species.*;
 import org.azgnetov.utils.ConsoleColors;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
+import static org.azgnetov.model.Plant.plantsPopulation;
+
 public class Arena {
-  public static final int X_RESOLUTION = 20;
-  public static final int Y_RESOLUTION = 20;
-  public static final int ITERATIONS = 1000;
-  public static final int ITERATION_DELAY_MS = 1;
+  public static final int X_RESOLUTION = 3;
+  public static final int Y_RESOLUTION = 3;
+  public static final int ITERATIONS = 5;
+  public static final int ITERATION_DELAY_MS = 200;
+  public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION;
+  public static final int PLANTS_DIFF = 20;
 
   public static HashSet<Plant> plants = new HashSet<>();
   public static HashSet<Herbivore> herbivores = new HashSet<>();
@@ -25,9 +31,9 @@ public class Arena {
   public static HashSet<Eagle> eagles = new HashSet<>();
 
   public Arena() {
-    growPlants(100);
+    growPlants();
 
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 10; i++) {
       herbivores.add(new Horse(i));
       herbivores.add(new Deer(i));
     }
@@ -41,16 +47,9 @@ public class Arena {
     }
   }
 
-  public void growPlants(int number) {
-    System.out.printf("Начинается рост %d растений%n", number);
-    for (int i = 1; i <= number; i++) {
-      plants.add(new Plant());
-    }
-  }
-
-  synchronized public void growPlants() throws InterruptedException {
-    if (plants.size() < 1000) {
-      int random = new Random().nextInt(100);
+  synchronized public void growPlants() {
+    if (plants.size() < PLANTS_MAX) {
+      int random = new Random().nextInt(PLANTS_DIFF);
       System.out.printf("Сейчас %d растений. Выросло еще %d растений%n", plants.size(), random);
       for (int i = 1; i <= random; i++) {
         plants.add(new Plant());
@@ -58,6 +57,8 @@ public class Arena {
     } else {
       System.out.printf("Сейчас %d растений. Рост новых растений остановлен%n", plants.size());
     }
+    // показать карту распространения растений
+    //System.out.println(Arrays.deepToString(plantsPopulation));
   }
 
   // не работает
@@ -95,12 +96,6 @@ public class Arena {
     }
   }
 
-  public void turn() {
-    moveHerbivores();
-    moveCarnivores();
-    killEntities();
-  }
-
   synchronized public void moveHerbivores() {
     for (Herbivore herbivore : herbivores) {
       herbivore.move();
@@ -119,9 +114,21 @@ public class Arena {
     }
   }
 
-  synchronized public void killEntities() {
+  synchronized public void killEntitiesOld() {
     plants.removeIf(plant -> plant.getHealth() == 0);
     herbivores.removeIf(herbivore -> herbivore.getHealth() == 0);
+    carnivores.removeIf(herbivore -> herbivore.getHealth() == 0);
+  }
+
+  synchronized public <T extends Entity> void killEntities(HashSet<T> entities) {
+    Iterator<T> iterator = entities.iterator();
+    while (iterator.hasNext()) {
+      T entity = iterator.next();
+      if (entity.getHealth() == 0) {
+        entity.decreasePopulation(entity.getX(), entity.getY());
+        iterator.remove();
+      }
+    }
   }
 
 }

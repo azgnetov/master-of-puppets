@@ -14,11 +14,6 @@ public class Deer extends Herbivore {
   }
 
   @Override
-  public void move() {
-    super.move(deerMap);
-  }
-
-  @Override
   public Animal reproduce() {
 
     return null;

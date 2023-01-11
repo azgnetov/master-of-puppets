@@ -11,20 +11,30 @@ public abstract class Entity {
   private int x;
   private int y;
   private float health; // здоровье или вес от 0 до healthMax
-  private float healthMax; // максимальное здоровье или вес
+  private final float healthMax; // максимальное здоровье или вес
   private final int density; // плотность на клетку
+  private final int[][] population;
 
-  public Entity(EntityParams params, int[][] map) {
+  public Entity(EntityParams params, int[][] population) {
     this.type = params.getTitle();
     this.title = params.getTitle();
     this.health = params.getHealth();
     this.healthMax = params.getHealth();
     this.density = params.getDensity();
+    this.population = population;
+    int attempts = 0;
+    int attemptLimit = 100;
     do {
       this.x = new Random().nextInt(X_RESOLUTION);
       this.y = new Random().nextInt(Y_RESOLUTION);
-    } while (map[this.x][this.y] >= density);
-    map[this.x][this.y]++;
+      attempts++;
+      if (attempts > attemptLimit) {
+        System.out.printf("Обнаружено перенаселение для вида '%s', новая особь родилась нежизнеспособной%n", this.type);
+        this.health = 0;
+        break;
+      }
+    } while (this.population[this.x][this.y] >= density);
+    this.population[this.x][this.y]++;
   }
 
   public String getTitle() {
@@ -69,6 +79,18 @@ public abstract class Entity {
 
   public void setHealth(float health) {
     this.health = Math.min(Math.max(health, 0), this.healthMax);
+  }
+
+  public int getPopulation(int x, int y) {
+    return population[x][y];
+  }
+
+  public void increasePopulation(int x, int y) {
+    this.population[x][y]++;
+  }
+
+  public void decreasePopulation(int x, int y) {
+    this.population[x][y]--;
   }
 
 }

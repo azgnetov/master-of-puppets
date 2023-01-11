@@ -30,7 +30,7 @@ public class Animal extends Entity {
     this.satiety = Math.max(0, Math.min(this.satiety + diff, this.voracity));
   }
 
-  public void move(int[][] map) {
+  public void move() {
     addSatiety(-1);
 
     if (getHealth() / getHealthMax() < 0.5) {
@@ -51,7 +51,7 @@ public class Animal extends Entity {
         case 2 -> setX(Math.min(getX() + step, X_RESOLUTION - 1)); // right
         case 3 -> setX(Math.max(getX() - step, 0)); // left
       }
-    } while (map[getX()][getY()] >= getDensity());
+    } while (getPopulation(getX(), getY()) >= getDensity());
 
     if (oldX == getX() && oldY == getY()) {
       System.out.printf(ConsoleColors.CYAN + "Существо %s решило никуда не ходить и осталось в клетке [%s:%s]",
@@ -62,8 +62,8 @@ public class Animal extends Entity {
     }
     System.out.println(ConsoleColors.RESET);
 
-    map[oldX][oldY]--;
-    map[getX()][getY()]++;
+    decreasePopulation(oldX, oldY);
+    increasePopulation(getX(), getY());
   }
 
   public void eat(Entity entity) {

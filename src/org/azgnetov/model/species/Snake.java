@@ -13,11 +13,6 @@ public class Snake extends Carnivore {
   }
 
   @Override
-  public void move() {
-    super.move(snakeMap);
-  }
-
-  @Override
   public void reproduce() {
 
   }
