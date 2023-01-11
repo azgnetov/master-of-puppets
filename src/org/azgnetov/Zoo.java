@@ -10,6 +10,8 @@ import java.util.Random;
 public class Zoo {
   public static final int X_RESOLUTION = 20;
   public static final int Y_RESOLUTION = 20;
+  public static final int ITERATIONS = 100;
+  public static final int ITERATION_DELAY_MS = 100;
 
   public static HashSet<Plant> plants = new HashSet<>();
   public static HashSet<Herbivore> herbivores = new HashSet<>();
