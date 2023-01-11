@@ -3,8 +3,8 @@ package org.azgnetov.model;
 import org.azgnetov.utils.CSVScanner;
 import org.azgnetov.utils.ConsoleColors;
 import java.util.Random;
-import static org.azgnetov.Zoo.X_RESOLUTION;
-import static org.azgnetov.Zoo.Y_RESOLUTION;
+import static org.azgnetov.arena.Arena.X_RESOLUTION;
+import static org.azgnetov.arena.Arena.Y_RESOLUTION;
 
 public class Animal extends Entity {
   private int velocity; // скорость

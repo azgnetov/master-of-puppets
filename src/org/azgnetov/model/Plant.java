@@ -1,9 +1,9 @@
 package org.azgnetov.model;
 
-import org.azgnetov.Zoo;
+import org.azgnetov.arena.Arena;
 
 public class Plant extends Entity {
-  public static int[][] plantMap = new int[Zoo.X_RESOLUTION][Zoo.Y_RESOLUTION];
+  public static int[][] plantMap = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
 
   public Plant() {
     super(EntityParams.PLANT, plantMap);

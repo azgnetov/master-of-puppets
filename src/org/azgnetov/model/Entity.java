@@ -2,8 +2,8 @@ package org.azgnetov.model;
 
 import java.util.Random;
 
-import static org.azgnetov.Zoo.X_RESOLUTION;
-import static org.azgnetov.Zoo.Y_RESOLUTION;
+import static org.azgnetov.arena.Arena.X_RESOLUTION;
+import static org.azgnetov.arena.Arena.Y_RESOLUTION;
 
 public abstract class Entity {
   private final String type;
