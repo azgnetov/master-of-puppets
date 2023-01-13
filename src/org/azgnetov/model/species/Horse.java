@@ -6,15 +6,15 @@ import org.azgnetov.model.EntityParams;
 import org.azgnetov.model.Herbivore;
 
 public class Horse extends Herbivore {
-  public static int[][] horseMap = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
+  public static int[][] horsePopulation = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
 
   public Horse(int number) {
-    super(EntityParams.HORSE, horseMap);
+    super(EntityParams.HORSE, horsePopulation);
     setTitle(getType() + "-" + number);
   }
 
   @Override
   public Animal reproduce() {
-    return reproduce(EntityParams.HORSE, horseMap);
+    return reproduce(EntityParams.HORSE, horsePopulation);
   }
 }
