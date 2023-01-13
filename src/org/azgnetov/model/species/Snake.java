@@ -7,9 +7,9 @@ import org.azgnetov.model.EntityParams;
 public class Snake extends Carnivore {
   public static int[][] snakePopulation = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
 
-  public Snake(int number) {
+  public Snake() {
     super(EntityParams.SNAKE, snakePopulation);
-    setTitle(getType() + "-" + number);
+    setTitle(getType() + "-" + hashCode());
   }
 
   @Override

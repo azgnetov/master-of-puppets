@@ -8,9 +8,9 @@ import org.azgnetov.model.Herbivore;
 public class Horse extends Herbivore {
   public static int[][] horsePopulation = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
 
-  public Horse(int number) {
+  public Horse() {
     super(EntityParams.HORSE, horsePopulation);
-    setTitle(getType() + "-" + number);
+    setTitle(getType() + "-" + hashCode());
   }
 
   @Override

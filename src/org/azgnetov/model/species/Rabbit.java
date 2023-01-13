@@ -5,16 +5,16 @@ import org.azgnetov.model.Animal;
 import org.azgnetov.model.EntityParams;
 import org.azgnetov.model.Herbivore;
 
-public class Deer extends Herbivore {
-  public static int[][] deerPopulation = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
+public class Rabbit extends Herbivore {
+  public static int[][] rabbitPopulation = new int[Arena.X_RESOLUTION][Arena.Y_RESOLUTION];
 
-  public Deer() {
-    super(EntityParams.DEER, deerPopulation);
+  public Rabbit() {
+    super(EntityParams.RABBIT, rabbitPopulation);
     setTitle(getType() + "-" + hashCode());
   }
 
   @Override
   public Animal reproduce() {
-    return reproduce(EntityParams.DEER, deerPopulation);
+    return null;
   }
 }

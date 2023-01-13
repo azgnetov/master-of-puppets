@@ -27,16 +27,17 @@ public class Arena {
     growPlants();
 
     for (int i = 1; i <= 10; i++) {
-      herbivores.add(new Horse(i));
-      herbivores.add(new Deer(i));
+      herbivores.add(new Horse());
+      herbivores.add(new Deer());
+      herbivores.add(new Rabbit());
     }
 
     for (int i = 1; i <= 10; i++) {
-      carnivores.add(new Wolf(i));
-      carnivores.add(new Snake(i));
-      carnivores.add(new Fox(i));
-      carnivores.add(new Bear(i));
-      carnivores.add(new Eagle(i));
+      carnivores.add(new Wolf());
+      carnivores.add(new Snake());
+      carnivores.add(new Fox());
+      carnivores.add(new Bear());
+      carnivores.add(new Eagle());
     }
   }
 
