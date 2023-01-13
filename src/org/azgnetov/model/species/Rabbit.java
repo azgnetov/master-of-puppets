@@ -14,7 +14,7 @@ public class Rabbit extends Herbivore {
   }
 
   @Override
-  public Animal reproduce() {
-    return null;
+  protected Animal newInstance() {
+    return new Rabbit();
   }
 }

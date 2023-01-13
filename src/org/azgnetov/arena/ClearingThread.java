@@ -9,6 +9,7 @@ import static org.azgnetov.arena.Arena.ITERATION_DELAY_MS;
 public class ClearingThread extends Thread {
   Arena arena;
   protected volatile boolean stopped;
+  private final static boolean SHOW_DETAILS = false;
 
   public ClearingThread(Arena arena) {
     this.arena = arena;
@@ -31,6 +32,6 @@ public class ClearingThread extends Thread {
   public void stopClearing() {
     stopped = true;
     arena.showSummary();
-    //arena.showDetails();
+    if (SHOW_DETAILS) arena.showDetails();
   }
 }

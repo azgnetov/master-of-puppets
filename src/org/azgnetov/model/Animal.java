@@ -2,20 +2,24 @@ package org.azgnetov.model;
 
 import org.azgnetov.utils.CSVScanner;
 import org.azgnetov.utils.ConsoleColors;
-import java.util.Random;
-import static org.azgnetov.arena.Arena.X_RESOLUTION;
-import static org.azgnetov.arena.Arena.Y_RESOLUTION;
 
-public class Animal extends Entity {
+import java.util.HashSet;
+import java.util.Random;
+
+import static org.azgnetov.arena.Arena.*;
+
+public abstract class Animal extends Entity {
   private int velocity; // скорость
   private float voracity; // прожорливость
   private float satiety; // насыщение от 0 до voracity
+  private int fertility; // фертильность
 
   public Animal(EntityParams params, int[][] map) {
     super(params, map);
     this.velocity = params.getVelocity();
     this.voracity = params.getVoracity();
     this.satiety = params.getVoracity();
+    this.fertility = params.getFertility();
   }
 
   public float getSatiety() {
@@ -30,7 +34,7 @@ public class Animal extends Entity {
     this.satiety = Math.max(0, Math.min(this.satiety + diff, this.voracity));
   }
 
-  public void move() {
+  synchronized public void move() {
     addSatiety(-1);
 
     if (getHealth() / getHealthMax() < 0.5) {
@@ -66,7 +70,7 @@ public class Animal extends Entity {
     increasePopulation(getX(), getY());
   }
 
-  public void eat(Entity entity) {
+  synchronized public void eat(Entity entity) {
     if (getX() == entity.getX() && getY() == entity.getY() && entity.getHealth() > 0) {
       if (getSatiety() < getVoracity()) {
         int probability = CSVScanner.scan(getType(), entity.getType());
@@ -95,12 +99,27 @@ public class Animal extends Entity {
     }
   }
 
-  // не работает
-  protected Animal reproduce(EntityParams params, int[][] map) {
-    Animal animal = new Animal(params, map);
-    System.out.printf(ConsoleColors.GREEN_BOLD + "Существо %s встретило сородича и размножилось", getTitle());
-    System.out.println(ConsoleColors.RESET);
-    return animal;
+  synchronized public <T extends Animal> void reproduce(HashSet<T> animals) {
+    if (!isAlone() &&
+        !isOverPopulated() &&
+        this.getHealth() == this.getHealthMax() &&
+        this.getSatiety() / this.getVoracity() > 0.8) {
+      int probability = new Random().nextInt(100);
+      if (probability < this.fertility) {
+        Animal newbie = newInstance();
+        System.out.printf(ConsoleColors.PURPLE + "Существо %s встретило сородича и размножилось, родился %s", getTitle(), newbie.getTitle());
+        System.out.println(ConsoleColors.RESET);
+
+        if (newbie != null) animals.add((T) newbie);
+        else System.out.println("Родила царица в ночь не то сына, не то дочь, не мышонка, не лягушку, а неведому зверюшку");
+
+        newbie.decreasePopulation(newbie.getX(), newbie.getY());
+        newbie.setX(this.getX());
+        newbie.setY(this.getY());
+        newbie.increasePopulation(newbie.getX(), newbie.getY());
+      }
+    }
   }
 
+  protected abstract Animal newInstance();
 }

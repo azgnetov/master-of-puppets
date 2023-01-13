@@ -12,5 +12,4 @@ public abstract class Herbivore extends Animal {
     }
   }
 
-  public abstract Animal reproduce();
 }

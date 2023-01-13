@@ -33,7 +33,7 @@ public abstract class Entity {
         this.health = 0;
         break;
       }
-    } while (this.population[this.x][this.y] >= density);
+    } while (isOverPopulated());
     this.population[this.x][this.y]++;
   }
 
@@ -91,6 +91,14 @@ public abstract class Entity {
 
   public void decreasePopulation(int x, int y) {
     this.population[x][y]--;
+  }
+
+  public boolean isAlone() {
+    return population[x][y] < 2;
+  }
+
+  public boolean isOverPopulated() {
+    return population[x][y] >= density;
   }
 
 }

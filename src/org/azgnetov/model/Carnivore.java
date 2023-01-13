@@ -11,6 +11,4 @@ public abstract class Carnivore extends Animal {
       super.eat(entity);
     }
   }
-
-  public abstract void reproduce();
 }

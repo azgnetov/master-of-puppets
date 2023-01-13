@@ -14,7 +14,7 @@ public class Deer extends Herbivore {
   }
 
   @Override
-  public Animal reproduce() {
-    return reproduce(EntityParams.DEER, deerPopulation);
+  protected Animal newInstance() {
+    return new Deer();
   }
 }

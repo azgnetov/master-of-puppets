@@ -14,7 +14,7 @@ public class Horse extends Herbivore {
   }
 
   @Override
-  public Animal reproduce() {
-    return reproduce(EntityParams.HORSE, horsePopulation);
+  protected Animal newInstance() {
+    return new Horse();
   }
 }

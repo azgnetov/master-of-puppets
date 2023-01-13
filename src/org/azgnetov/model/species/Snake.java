@@ -1,6 +1,7 @@
 package org.azgnetov.model.species;
 
 import org.azgnetov.arena.Arena;
+import org.azgnetov.model.Animal;
 import org.azgnetov.model.Carnivore;
 import org.azgnetov.model.EntityParams;
 
@@ -13,7 +14,7 @@ public class Snake extends Carnivore {
   }
 
   @Override
-  public void reproduce() {
-
+  protected Animal newInstance() {
+    return new Snake();
   }
 }

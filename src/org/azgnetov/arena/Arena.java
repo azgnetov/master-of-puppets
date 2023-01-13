@@ -4,32 +4,29 @@ import org.azgnetov.model.*;
 import org.azgnetov.model.species.*;
 import org.azgnetov.utils.ConsoleColors;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
-
+import java.util.*;
 import static org.azgnetov.model.Plant.plantsPopulation;
 
 public class Arena {
-  public static final int X_RESOLUTION = 3;
-  public static final int Y_RESOLUTION = 3;
-  public static final int ITERATIONS = 5;
+  public static final int X_RESOLUTION = 10;
+  public static final int Y_RESOLUTION = 10;
+  public static final int ITERATIONS = 50;
   public static final int ITERATION_DELAY_MS = 200;
-  public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION;
-  public static final int PLANTS_DIFF = 20;
+  public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2;
+  public static final int PLANTS_DIFF = 200;
+  public static final boolean SHOW_PLANTS_MAP = false;
 
-  public static HashSet<Plant> plants = new HashSet<>();
-  public static HashSet<Herbivore> herbivores = new HashSet<>();
-  public static HashSet<Carnivore> carnivores = new HashSet<>();
+  public static final HashSet<Plant> plants = new HashSet<>();
+  public static final HashSet<Herbivore> herbivores = new HashSet<>();
+  public static final HashSet<Carnivore> carnivores = new HashSet<>();
 
   public Arena() {
     growPlants();
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= 50; i++) {
       herbivores.add(new Horse());
       herbivores.add(new Deer());
-      herbivores.add(new Rabbit());
+      //herbivores.add(new Rabbit());
     }
 
     for (int i = 1; i <= 10; i++) {
@@ -51,24 +48,7 @@ public class Arena {
     } else {
       System.out.printf("Сейчас %d растений. Рост новых растений остановлен%n", plants.size());
     }
-    // показать карту распространения растений
-    //System.out.println(Arrays.deepToString(plantsPopulation));
-  }
-
-  // не работает
-  public void growEntities(EntityParams params, HashSet<Entity> set, int number)
-      throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-    for (int i = 1; i <= number; i++) {
-      Entity entity = (Entity) Class.forName("org.azgnetov.model.Entity").getConstructor().newInstance(number);
-      set.add(entity);
-    }
-  }
-
-  public void showSummary(String step) {
-    System.out.printf(ConsoleColors.BLACK_BACKGROUND_BRIGHT +
-        "Ход %s. Сейчас в зоопарке есть существа: %s растений, %s травоядных, %s хищников",
-        step, plants.size(), herbivores.size(), carnivores.size());
-    System.out.println(ConsoleColors.RESET);
+    if (SHOW_PLANTS_MAP) System.out.println(Arrays.deepToString(plantsPopulation)); // показать карту распространения растений
   }
 
   synchronized public void showSummary() {
@@ -93,25 +73,31 @@ public class Arena {
   synchronized public void moveHerbivores() {
     for (Herbivore herbivore : herbivores) {
       herbivore.move();
-      for (Plant plant : plants) {
-        herbivore.eat(plant);
+      synchronized (plants) {
+        for (Plant plant : plants) {
+          herbivore.eat(plant);
+        }
       }
+    }
+    HashSet<Herbivore> herbivoresCopy = new HashSet<>(herbivores);
+    for (Herbivore herbivoreCopy : herbivoresCopy) {
+      herbivoreCopy.reproduce(herbivores);
     }
   }
 
   synchronized public void moveCarnivores() {
     for (Carnivore carnivore : carnivores) {
       carnivore.move();
-      for (Herbivore herbivore : herbivores) {
-        carnivore.eat(herbivore);
+      synchronized (herbivores) {
+        for (Herbivore herbivore : herbivores) {
+          carnivore.eat(herbivore);
+        }
       }
     }
-  }
-
-  synchronized public void killEntitiesOld() {
-    plants.removeIf(plant -> plant.getHealth() == 0);
-    herbivores.removeIf(herbivore -> herbivore.getHealth() == 0);
-    carnivores.removeIf(herbivore -> herbivore.getHealth() == 0);
+    HashSet<Carnivore> carnivoresCopy = new HashSet<>(carnivores);
+    for (Carnivore carnivoreCopy : carnivoresCopy) {
+      carnivoreCopy.reproduce(carnivores);
+    }
   }
 
   synchronized public <T extends Entity> void killEntities(HashSet<T> entities) {
