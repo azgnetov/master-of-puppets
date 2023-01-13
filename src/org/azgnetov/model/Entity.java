@@ -12,8 +12,8 @@ public abstract class Entity {
   private int y;
   private float health; // здоровье или вес от 0 до healthMax
   private final float healthMax; // максимальное здоровье или вес
-  private final int density; // плотность на клетку
-  private final int[][] population;
+  private final int density; // максимальная плотность на клетку
+  private final int[][] population; // карта населенности вида
 
   public Entity(EntityParams params, int[][] population) {
     this.type = params.getTitle();

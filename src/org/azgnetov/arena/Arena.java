@@ -22,13 +22,6 @@ public class Arena {
   public static HashSet<Plant> plants = new HashSet<>();
   public static HashSet<Herbivore> herbivores = new HashSet<>();
   public static HashSet<Carnivore> carnivores = new HashSet<>();
-  public static HashSet<Horse> horses = new HashSet<>();
-  public static HashSet<Deer> deers = new HashSet<>();
-  public static HashSet<Wolf> wolfs = new HashSet<>();
-  public static HashSet<Snake> snakes = new HashSet<>();
-  public static HashSet<Fox> foxes = new HashSet<>();
-  public static HashSet<Bear> bears = new HashSet<>();
-  public static HashSet<Eagle> eagles = new HashSet<>();
 
   public Arena() {
     growPlants();
