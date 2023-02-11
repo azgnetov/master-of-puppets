@@ -3,17 +3,16 @@ package org.azgnetov.arena;
 import org.azgnetov.model.*;
 import org.azgnetov.model.species.*;
 import org.azgnetov.utils.ConsoleColors;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import static org.azgnetov.model.Plant.plantsPopulation;
 
 public class Arena {
-  public static final int X_RESOLUTION = 10;
-  public static final int Y_RESOLUTION = 10;
-  public static final int ITERATIONS = 50;
+  public static final int X_RESOLUTION = 3;
+  public static final int Y_RESOLUTION = 3;
+  public static final int ITERATIONS = 5;
   public static final int ITERATION_DELAY_MS = 200;
   public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2;
-  public static final int PLANTS_DIFF = 200;
+  public static final int PLANTS_DIFF = 30;
   public static final boolean SHOW_PLANTS_MAP = false;
 
   public static final HashSet<Plant> plants = new HashSet<>();
@@ -23,10 +22,20 @@ public class Arena {
   public Arena() {
     growPlants();
 
-    for (int i = 1; i <= 50; i++) {
+    for (int i = 1; i <= 10; i++) {
       herbivores.add(new Horse());
       herbivores.add(new Deer());
-      //herbivores.add(new Rabbit());
+      herbivores.add(new Rabbit());
+      herbivores.add(new Mouse());
+      herbivores.add(new Goat());
+      herbivores.add(new Sheep());
+      herbivores.add(new Boar());
+      herbivores.add(new Buffalo());
+      herbivores.add(new Duck());
+    }
+
+    for (int i = 1; i <= 20; i++) {
+      herbivores.add(new Caterpillar());
     }
 
     for (int i = 1; i <= 10; i++) {
@@ -83,6 +92,7 @@ public class Arena {
     for (Herbivore herbivoreCopy : herbivoresCopy) {
       herbivoreCopy.reproduce(herbivores);
     }
+    showSummary();
   }
 
   synchronized public void moveCarnivores() {
@@ -98,6 +108,7 @@ public class Arena {
     for (Carnivore carnivoreCopy : carnivoresCopy) {
       carnivoreCopy.reproduce(carnivores);
     }
+    showSummary();
   }
 
   synchronized public <T extends Entity> void killEntities(HashSet<T> entities) {
@@ -107,6 +118,14 @@ public class Arena {
       if (entity.getHealth() == 0) {
         entity.decreasePopulation(entity.getX(), entity.getY());
         iterator.remove();
+      }
+    }
+  }
+
+  synchronized public <T extends Animal> void starve(HashSet<T> entities) {
+    for (T entity : entities) {
+      if (entity.getSatiety() == 0) {
+        entity.setHealth(Math.round(entity.getHealth() / 10));
       }
     }
   }

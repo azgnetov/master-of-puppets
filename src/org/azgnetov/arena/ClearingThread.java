@@ -18,6 +18,8 @@ public class ClearingThread extends Thread {
   @Override
   public void run() {
     while (!stopped) {
+      arena.starve(Arena.herbivores);
+      arena.starve(Arena.carnivores);
       arena.killEntities(Arena.plants);
       arena.killEntities(Arena.herbivores);
       arena.killEntities(Arena.carnivores);

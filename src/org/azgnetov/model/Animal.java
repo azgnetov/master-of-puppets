@@ -9,10 +9,10 @@ import java.util.Random;
 import static org.azgnetov.arena.Arena.*;
 
 public abstract class Animal extends Entity {
-  private int velocity; // скорость
-  private float voracity; // прожорливость
+  private final int velocity; // скорость
+  private final float voracity; // прожорливость
   private float satiety; // насыщение от 0 до voracity
-  private int fertility; // фертильность
+  private final int fertility; // фертильность
 
   public Animal(EntityParams params, int[][] map) {
     super(params, map);
