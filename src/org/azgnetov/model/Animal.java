@@ -36,7 +36,6 @@ public abstract class Animal extends Entity {
 
   synchronized public void move() {
     addSatiety(-1);
-
     if (getHealth() / getHealthMax() < 0.5) {
       System.out.printf(ConsoleColors.PURPLE + "Существо %s (%s HP) ранено и не может покинуть клетку [%s:%s]",
           getTitle(), getHealth(), getX(), getY());

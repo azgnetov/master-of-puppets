@@ -14,36 +14,38 @@ public class Arena {
   public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2;
   public static final int PLANTS_DIFF = 30;
   public static final boolean SHOW_PLANTS_MAP = false;
+  public static final boolean SHOW_DETAILS = true;
 
   public static final HashSet<Plant> plants = new HashSet<>();
   public static final HashSet<Herbivore> herbivores = new HashSet<>();
   public static final HashSet<Carnivore> carnivores = new HashSet<>();
 
+
   public Arena() {
     growPlants();
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= 1; i++) {
       herbivores.add(new Horse());
       herbivores.add(new Deer());
       herbivores.add(new Rabbit());
       herbivores.add(new Mouse());
       herbivores.add(new Goat());
       herbivores.add(new Sheep());
-      herbivores.add(new Boar());
       herbivores.add(new Buffalo());
       herbivores.add(new Duck());
     }
 
-    for (int i = 1; i <= 20; i++) {
+    for (int i = 1; i <= 10; i++) {
       herbivores.add(new Caterpillar());
     }
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= 1; i++) {
       carnivores.add(new Wolf());
       carnivores.add(new Snake());
       carnivores.add(new Fox());
       carnivores.add(new Bear());
       carnivores.add(new Eagle());
+      carnivores.add(new Boar());
     }
   }
 
@@ -80,14 +82,23 @@ public class Arena {
   }
 
   synchronized public void moveHerbivores() {
+    // травоядные двигаются и едят растения и гусениц
     for (Herbivore herbivore : herbivores) {
-      herbivore.move();
+      if (herbivore instanceof Caterpillar) {
+        herbivore.addSatiety(-0.01f);
+      } else {
+        herbivore.move();
+        for (Herbivore caterpillar : herbivores) {
+          herbivore.eat(caterpillar);
+        }
+      }
       synchronized (plants) {
         for (Plant plant : plants) {
           herbivore.eat(plant);
         }
       }
     }
+    // травоядные размножатися
     HashSet<Herbivore> herbivoresCopy = new HashSet<>(herbivores);
     for (Herbivore herbivoreCopy : herbivoresCopy) {
       herbivoreCopy.reproduce(herbivores);
@@ -96,6 +107,7 @@ public class Arena {
   }
 
   synchronized public void moveCarnivores() {
+    // плотоядные двигаются и едят травоядных
     for (Carnivore carnivore : carnivores) {
       carnivore.move();
       synchronized (herbivores) {
@@ -104,6 +116,7 @@ public class Arena {
         }
       }
     }
+    // плотоядные размножаются
     HashSet<Carnivore> carnivoresCopy = new HashSet<>(carnivores);
     for (Carnivore carnivoreCopy : carnivoresCopy) {
       carnivoreCopy.reproduce(carnivores);

@@ -1,15 +1,12 @@
 package org.azgnetov.arena;
 
 import java.util.Random;
-import java.util.TreeMap;
 
-import static org.azgnetov.arena.Arena.ITERATIONS;
 import static org.azgnetov.arena.Arena.ITERATION_DELAY_MS;
 
 public class ClearingThread extends Thread {
   Arena arena;
   protected volatile boolean stopped;
-  private final static boolean SHOW_DETAILS = false;
 
   public ClearingThread(Arena arena) {
     this.arena = arena;
@@ -34,6 +31,6 @@ public class ClearingThread extends Thread {
   public void stopClearing() {
     stopped = true;
     arena.showSummary();
-    if (SHOW_DETAILS) arena.showDetails();
+    if (Arena.SHOW_DETAILS) arena.showDetails();
   }
 }
