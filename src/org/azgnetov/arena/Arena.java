@@ -14,7 +14,7 @@ public class Arena {
   public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2;
   public static final int PLANTS_DIFF = 30;
   public static final boolean SHOW_PLANTS_MAP = false;
-  public static final boolean SHOW_DETAILS = true;
+  public static final boolean SHOW_DETAILS = false;
 
   public static final HashSet<Plant> plants = new HashSet<>();
   public static final HashSet<Herbivore> herbivores = new HashSet<>();
@@ -39,7 +39,7 @@ public class Arena {
       herbivores.add(new Caterpillar());
     }
 
-    for (int i = 1; i <= 1; i++) {
+    for (int i = 1; i <= 5; i++) {
       carnivores.add(new Wolf());
       carnivores.add(new Snake());
       carnivores.add(new Fox());
@@ -64,7 +64,7 @@ public class Arena {
 
   synchronized public void showSummary() {
     System.out.printf(ConsoleColors.BLACK_BACKGROUND_BRIGHT +
-            "Сейчас в зоопарке есть существа: %s растений, %s травоядных, %s хищников",
+            "Сейчас на арене есть существа: %s растений, %s травоядных, %s хищников",
         plants.size(), herbivores.size(), carnivores.size());
     System.out.println(ConsoleColors.RESET);
   }
@@ -107,12 +107,19 @@ public class Arena {
   }
 
   synchronized public void moveCarnivores() {
-    // плотоядные двигаются и едят травоядных
+    // плотоядные двигаются и едят всех кроме сородичей
     for (Carnivore carnivore : carnivores) {
       carnivore.move();
       synchronized (herbivores) {
         for (Herbivore herbivore : herbivores) {
           carnivore.eat(herbivore);
+        }
+      }
+      synchronized (carnivores) {
+        for (Carnivore victim : carnivores) {
+          if (!Objects.equals(carnivore.getClass().getName(), victim.getClass().getName())) {
+            carnivore.eat(victim);
+          }
         }
       }
     }
