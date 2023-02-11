@@ -6,7 +6,8 @@ import org.azgnetov.utils.ConsoleColors;
 import java.util.HashSet;
 import java.util.Random;
 
-import static org.azgnetov.arena.Arena.*;
+import static org.azgnetov.arena.Arena.X_RESOLUTION;
+import static org.azgnetov.arena.Arena.Y_RESOLUTION;
 
 public abstract class Animal extends Entity {
   private final int velocity; // скорость
@@ -108,10 +109,7 @@ public abstract class Animal extends Entity {
         Animal newbie = newInstance();
         System.out.printf(ConsoleColors.PURPLE + "Существо %s встретило сородича и размножилось, родился %s", getTitle(), newbie.getTitle());
         System.out.println(ConsoleColors.RESET);
-
-        if (newbie != null) animals.add((T) newbie);
-        else System.out.println("Родила царица в ночь не то сына, не то дочь, не мышонка, не лягушку, а неведому зверюшку");
-
+        animals.add((T) newbie);
         newbie.decreasePopulation(newbie.getX(), newbie.getY());
         newbie.setX(this.getX());
         newbie.setY(this.getY());

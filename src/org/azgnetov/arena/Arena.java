@@ -3,18 +3,20 @@ package org.azgnetov.arena;
 import org.azgnetov.model.*;
 import org.azgnetov.model.species.*;
 import org.azgnetov.utils.ConsoleColors;
+
 import java.util.*;
+
 import static org.azgnetov.model.Plant.plantsPopulation;
 
 public class Arena {
-  public static final int X_RESOLUTION = 3;
-  public static final int Y_RESOLUTION = 3;
-  public static final int ITERATIONS = 5;
-  public static final int ITERATION_DELAY_MS = 200;
-  public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2;
-  public static final int PLANTS_DIFF = 30;
-  public static final boolean SHOW_PLANTS_MAP = false;
-  public static final boolean SHOW_DETAILS = false;
+  public static final int X_RESOLUTION = 5; // длина арены
+  public static final int Y_RESOLUTION = 5; // ширина арены
+  public static final int ITERATIONS = 5; // число ходов
+  public static final int ITERATION_DELAY_MS = 200; // задержка между ходами в мс
+  public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2; // лимит растений
+  public static final int PLANTS_DIFF = 30; // прирост растений
+  public static final boolean SHOW_PLANTS_MAP = false; // показать карту распространения растений
+  public static final boolean SHOW_DETAILS = false; // показать детальный отчет
 
   public static final HashSet<Plant> plants = new HashSet<>();
   public static final HashSet<Herbivore> herbivores = new HashSet<>();
@@ -24,7 +26,7 @@ public class Arena {
   public Arena() {
     growPlants();
 
-    for (int i = 1; i <= 1; i++) {
+    for (int i = 1; i <= 5; i++) {
       herbivores.add(new Horse());
       herbivores.add(new Deer());
       herbivores.add(new Rabbit());
@@ -50,6 +52,7 @@ public class Arena {
   }
 
   synchronized public void growPlants() {
+    // растения растут в количестве от 0 до лимита
     if (plants.size() < PLANTS_MAX) {
       int random = new Random().nextInt(PLANTS_DIFF);
       System.out.printf("Сейчас %d растений. Выросло еще %d растений%n", plants.size(), random);
@@ -59,7 +62,7 @@ public class Arena {
     } else {
       System.out.printf("Сейчас %d растений. Рост новых растений остановлен%n", plants.size());
     }
-    if (SHOW_PLANTS_MAP) System.out.println(Arrays.deepToString(plantsPopulation)); // показать карту распространения растений
+    if (SHOW_PLANTS_MAP) System.out.println(Arrays.deepToString(plantsPopulation));
   }
 
   synchronized public void showSummary() {
@@ -107,7 +110,7 @@ public class Arena {
   }
 
   synchronized public void moveCarnivores() {
-    // плотоядные двигаются и едят всех кроме сородичей
+    // хищники двигаются и едят всех кроме сородичей
     for (Carnivore carnivore : carnivores) {
       carnivore.move();
       synchronized (herbivores) {
@@ -123,7 +126,7 @@ public class Arena {
         }
       }
     }
-    // плотоядные размножаются
+    // хищники размножаются
     HashSet<Carnivore> carnivoresCopy = new HashSet<>(carnivores);
     for (Carnivore carnivoreCopy : carnivoresCopy) {
       carnivoreCopy.reproduce(carnivores);
@@ -132,6 +135,7 @@ public class Arena {
   }
 
   synchronized public <T extends Entity> void killEntities(HashSet<T> entities) {
+    // если здоровье на нуле, животное умирает
     Iterator<T> iterator = entities.iterator();
     while (iterator.hasNext()) {
       T entity = iterator.next();
@@ -143,8 +147,12 @@ public class Arena {
   }
 
   synchronized public <T extends Animal> void starve(HashSet<T> entities) {
+    // если насыщение на нуле, животное голодает
     for (T entity : entities) {
       if (entity.getSatiety() == 0) {
+        System.out.printf(ConsoleColors.GREEN + "%s голодает!",
+            entity.getTitle());
+        System.out.println(ConsoleColors.RESET);
         entity.setHealth(Math.round(entity.getHealth() / 10));
       }
     }

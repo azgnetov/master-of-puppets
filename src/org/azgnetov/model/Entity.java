@@ -6,8 +6,8 @@ import static org.azgnetov.arena.Arena.X_RESOLUTION;
 import static org.azgnetov.arena.Arena.Y_RESOLUTION;
 
 public abstract class Entity {
-  private final String type;
-  private String title;
+  private final String type; // вид
+  private String title; // название
   private int x;
   private int y;
   private float health; // здоровье или вес от 0 до healthMax
