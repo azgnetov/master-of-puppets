@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 
 public class CSVScanner {
-  private static final String FILENAME = "/cfg/Food.csv";
+  private static final String FILENAME = "/src/resources/Food.csv";
   private static final String HEADER = "Существо";
 
   public static int scan(String attacker, String defender) {
