@@ -2,21 +2,27 @@ package org.azgnetov.arena;
 
 import org.azgnetov.model.*;
 import org.azgnetov.model.species.*;
+import org.azgnetov.utils.CSVScanner;
 import org.azgnetov.utils.ConsoleColors;
 
+import java.io.BufferedReader;
 import java.util.*;
 
 import static org.azgnetov.model.Plant.plantsPopulation;
 
 public class Arena {
-  public static final int X_RESOLUTION = 5; // длина арены
-  public static final int Y_RESOLUTION = 5; // ширина арены
-  public static final int ITERATIONS = 5; // число ходов
-  public static final int ITERATION_DELAY_MS = 200; // задержка между ходами в мс
+  public static final int X_RESOLUTION = 10; // длина арены
+  public static final int Y_RESOLUTION = 10; // ширина арены
+  public static final int ITERATIONS = 2000; // число ходов
+  public static final int ITERATION_DELAY_MS = 2; // задержка между ходами в мс
   public static final int PLANTS_MAX = EntityParams.PLANT.getDensity() * X_RESOLUTION * Y_RESOLUTION / 2; // лимит растений
-  public static final int PLANTS_DIFF = 30; // прирост растений
+  public static final int PLANTS_DIFF = 300; // прирост растений
+  public static final int HERBIVORES_COUNT = 50;
+  public static final int CARNIVORES_COUNT = 50;
+  public static final int CATERPILLARS_COUNT = 50;
   public static final boolean SHOW_PLANTS_MAP = false; // показать карту распространения растений
   public static final boolean SHOW_DETAILS = false; // показать детальный отчет
+  public static BufferedReader READER;
 
   public static final HashSet<Plant> plants = new HashSet<>();
   public static final HashSet<Herbivore> herbivores = new HashSet<>();
@@ -24,9 +30,10 @@ public class Arena {
 
 
   public Arena() {
+    READER = CSVScanner.read();
     growPlants();
 
-    for (int i = 1; i <= 5; i++) {
+    for (int i = 1; i <= HERBIVORES_COUNT; i++) {
       herbivores.add(new Horse());
       herbivores.add(new Deer());
       herbivores.add(new Rabbit());
@@ -37,11 +44,11 @@ public class Arena {
       herbivores.add(new Duck());
     }
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= CATERPILLARS_COUNT; i++) {
       herbivores.add(new Caterpillar());
     }
 
-    for (int i = 1; i <= 5; i++) {
+    for (int i = 1; i <= CARNIVORES_COUNT; i++) {
       carnivores.add(new Wolf());
       carnivores.add(new Snake());
       carnivores.add(new Fox());

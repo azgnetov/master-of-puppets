@@ -10,16 +10,15 @@ public class CSVScanner {
   private static final String FILENAME = "/src/resources/Food.csv";
   private static final String HEADER = "Существо";
 
-  public static int scan(String attacker, String defender) {
+  public static int scan(BufferedReader bufferedReader, String attacker, String defender) {
     String line = "";
     String splitBy = ",";
     int position = 0;
     int probability = 0;
 
     try {
-      BufferedReader br = Files.newBufferedReader(Path.of(System.getProperty("user.dir"), FILENAME));
       String[] parsedLine;
-      while ((line = br.readLine()) != null) {
+      while ((line = bufferedReader.readLine()) != null) {
         parsedLine = line.split(splitBy);
         if (parsedLine[0].equals(HEADER)) {
           position = Arrays.asList(parsedLine).indexOf(defender);
@@ -27,10 +26,20 @@ public class CSVScanner {
           probability = Integer.parseInt(Arrays.asList(parsedLine).get(position));
         }
       }
-    } catch (IOException | NumberFormatException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
     return probability;
+  }
+
+  public static BufferedReader read() {
+    BufferedReader bufferedReader = null;
+    try {
+      bufferedReader = Files.newBufferedReader(Path.of(System.getProperty("user.dir"), FILENAME));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return bufferedReader;
   }
 }

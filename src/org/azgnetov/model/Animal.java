@@ -1,5 +1,6 @@
 package org.azgnetov.model;
 
+import org.azgnetov.arena.Arena;
 import org.azgnetov.utils.CSVScanner;
 import org.azgnetov.utils.ConsoleColors;
 
@@ -73,7 +74,7 @@ public abstract class Animal extends Entity {
   synchronized public void eat(Entity entity) {
     if (getX() == entity.getX() && getY() == entity.getY() && entity.getHealth() > 0) {
       if (getSatiety() < getVoracity()) {
-        int probability = CSVScanner.scan(getType(), entity.getType());
+        int probability = CSVScanner.scan(Arena.READER, getType(), entity.getType());
         if (new Random().nextInt(100) < probability) {
           System.out.printf(ConsoleColors.RED + "%s (%s HP / %s SP) выпил и закусил существом %s",
               getTitle(), getHealth(), getSatiety(), entity.getTitle());
